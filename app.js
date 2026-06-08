@@ -1,11 +1,11 @@
 //Declaraciones de variables
 const estudiantes = [
-  { id: 1, nombre: "Ana Lopez",    nota: 90 },
-  { id: 2, nombre: "Carlos Ruiz",  nota: 55 },
-  { id: 3, nombre: "Maria Torres", nota: 78 },
-  { id: 4, nombre: "Luis Mendez",  nota: 45 },
-  { id: 5, nombre: "Sofia Rios",   nota: 88 },
-  { id: 6, nombre: "Pedro Soto",   nota: 62 },
+    { id: 1, nombre: "Ana Lopez", nota: 90 },
+    { id: 2, nombre: "Carlos Ruiz", nota: 55 },
+    { id: 3, nombre: "Maria Torres", nota: 78 },
+    { id: 4, nombre: "Luis Mendez", nota: 45 },
+    { id: 5, nombre: "Sofia Rios", nota: 88 },
+    { id: 6, nombre: "Pedro Soto", nota: 62 },
 ];
 
 //Un estudiante solito
@@ -24,6 +24,10 @@ const btnTodos = document.getElementById("btn-todos");
 const btnAprobados = document.getElementById("btn-aprobados");
 const btnReprobados = document.getElementById("btn-reprobados");
 const btnPromedio = document.getElementById("btn-promedio");
+
+const inputNombre = document.getElementById("input-nombre");
+const inputNota = document.getElementById("input-nota");
+const btnAgregar = document.getElementById("btn-agregar");
 
 //Funciones
 const crearTarjeta = (unEstudiante) => {
@@ -52,17 +56,17 @@ const renderizarLista = (estudiantesApintar) => {
 
 const toFixedTrunc = (num, decimales) => {
     //10 elvado al  numero de decimales que deseas conservar
-    const factor = Math.pow (10, decimales);
+    const factor = Math.pow(10, decimales);
     /// multiplica, corta los decimales restantes y vuelve a dividir 
-    const truncado = Math.trunc(num * factor) / factor ;
+    const truncado = Math.trunc(num * factor) / factor;
     //retorna el string con le formato fijo final sin redondear 
     return truncado.toFixed(decimales);
 }
 
 //Eventos
 btnTodos.addEventListener('click',
-    () =>{
-    renderizarLista(estudiantes);
+    () => {
+        renderizarLista(estudiantes);
     }
 );
 
@@ -71,8 +75,8 @@ btnAprobados.addEventListener(
     () => {
         const aprobados = estudiantes.filter(
             (unEstudianteX) => {
-            
-             return unEstudianteX.nota > 60;
+
+                return unEstudianteX.nota > 60;
 
             }
 
@@ -87,8 +91,8 @@ btnReprobados.addEventListener(
     () => {
         const reprobados = estudiantes.filter(
             (unEstudianteX) => {
-            
-             return unEstudianteX.nota < 61;
+
+                return unEstudianteX.nota < 61;
 
             }
         );
@@ -96,18 +100,44 @@ btnReprobados.addEventListener(
     }
 );
 
-btnPromedio.addEventListener('click',() =>{
+btnAgregar.addEventListener('click', () => {
+    
 
-    const sumaNotas = estudiantes.reduce(
-    (variablePersistente , estudiante) => {
-        return variablePersistente + estudiante.nota;
-    } ,
-    0);
+    const nombre = inputNombre.value.trim(); //"  o" => "o"
+    const nota = parseInt(inputNota.value.trim()); //parseInt transforma a enteros los estring
 
-    const promedio = sumaNotas / estudiantes.length;
-    console.log (toFixedTrunc(promedio, 2));
-    sectionPromedio.innerHTML ="Promedio : " + toFixedTrunc(promedio , 2);
-    sectionPromedio.style.display = "block" ;
+    if (nombre === "" || isNaN(nota) || nota < 0 || nota > 100) {
+        alert("por favort revisa los datos ingresados ")
+        return;
+    }
+    const nuevoEstudiante = {
+        id: estudiantes.length + 1,
+        nombre: nombre,
+        nota: nota
+    };
+
+    estudiantes.push(nuevoEstudiante);
+    renderizarLista(estudiantes);
+
+    inputNombre.value = ""; //sirve para limpiar
+    inputNota.value = "";
+
 });
 
+btnPromedio.addEventListener('click', () => {
+
+    const sumaNotas = estudiantes.reduce(
+        (variablePersistente, estudiante) => {
+            return variablePersistente + estudiante.nota;
+        },
+        0);
+
+    const promedio = sumaNotas / estudiantes.length;
+    console.log(toFixedTrunc(promedio, 2));
+    sectionPromedio.innerHTML = "Promedio : " + toFixedTrunc(promedio, 2);
+    sectionPromedio.style.display = "block";
+});
+
+
 //Llamadas a funciones
+renderizarLista(estudiantes)
