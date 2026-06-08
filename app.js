@@ -19,6 +19,7 @@ const estudianteX = {
 //Referencias de DOM
 
 const sectionEstudiantes = document.getElementById("lista-estudiantes");
+const sectionPromedio = document.getElementById("resultado-promedio")
 const btnTodos = document.getElementById("btn-todos");
 const btnAprobados = document.getElementById("btn-aprobados");
 const btnReprobados = document.getElementById("btn-reprobados");
@@ -47,6 +48,15 @@ const renderizarLista = (estudiantesApintar) => {
         }
     );
     sectionEstudiantes.innerHTML = listaTarjetas.join("");
+}
+
+const toFixedTrunc = (num, decimales) => {
+    //10 elvado al  numero de decimales que deseas conservar
+    const factor = Math.pow (10, decimales);
+    /// multiplica, corta los decimales restantes y vuelve a dividir 
+    const truncado = Math.trunc(num * factor) / factor ;
+    //retorna el string con le formato fijo final sin redondear 
+    return truncado.toFixed(decimales);
 }
 
 //Eventos
@@ -86,6 +96,18 @@ btnReprobados.addEventListener(
     }
 );
 
+btnPromedio.addEventListener('click',() =>{
 
+    const sumaNotas = estudiantes.reduce(
+    (variablePersistente , estudiante) => {
+        return variablePersistente + estudiante.nota;
+    } ,
+    0);
+
+    const promedio = sumaNotas / estudiantes.length;
+    console.log (toFixedTrunc(promedio, 2));
+    sectionPromedio.innerHTML ="Promedio : " + toFixedTrunc(promedio , 2);
+    sectionPromedio.style.display = "block" ;
+});
 
 //Llamadas a funciones
